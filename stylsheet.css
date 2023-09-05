@@ -1,0 +1,24 @@
+.calc-container{
+    width: 300px;
+    height: 450px;
+    background-color: gray;
+    border: 1px red solid;
+    margin: auto;
+}
+
+.output-container{
+    background-color: white;
+}
+
+.input-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.input-row{
+    display: flex;
+}
+
+.input-row button{
+    flex: 1;
+}
