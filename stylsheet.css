@@ -6,6 +6,10 @@
     margin: auto;
 }
 
+.input-text{
+    text-align: right;
+}
+
 .output-container{
     background-color: white;
 }
