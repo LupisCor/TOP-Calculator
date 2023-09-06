@@ -12,6 +12,9 @@
 
 .output-container{
     background-color: white;
+    width: 250px;
+    height: 75px;
+    margin: auto;
 }
 
 .input-container{
