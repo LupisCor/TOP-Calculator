@@ -3,6 +3,7 @@ let number1 = NaN;
 let number2 = NaN;
 let operator = '';
 let currentInput = '';
+let prevSolution = '';
 
 const inputText = document.querySelector('.input-text');
 const equationText = document.querySelector('.equation-text');
@@ -42,8 +43,9 @@ function operate(num1, op, num2) {
         return division(num1, num2);
     }
 }
-
+// Create nodelist of all buttons with 'number-button' class
 const numberButtons = document.querySelectorAll('.number-button');
+// For each button in above node list, do something onclick
 numberButtons.forEach((button) => {
     button.onclick = function(e){
         currentInput += e.target.innerHTML;
@@ -51,28 +53,37 @@ numberButtons.forEach((button) => {
     }
 });
 
+// Create nodelist of all buttons with 'operator-button' class
 const operatorButtons = document.querySelectorAll('.operator-buttons');
+// For each button in above node list, do something onclick
 operatorButtons.forEach((button) => {
     button.onclick = function(e){
-        operator = e.target.innerHTML;
-        if (isNaN(number1)){
-            number1 = Number(currentInput);
+        if (prevSolution !== '' && currentInput === ''){
+            currentInput += prevSolution;
         }
-        else {
-            number1 = operate(number1, operator, Number(currentInput));
+        if(operator === ''){
+            operator = e.target.innerHTML;
+            currentInput += ` ${e.target.innerHTML} `;
+            inputText.innerHTML = currentInput;
         }
-        clearInput();
-        equationText.innerHTML = `${number1} ${operator}`;
     }
 });
 
 document.querySelector('#clear').onclick = function(){
+    if (currentInput === ''){
+        clearEquation();
+    }
     clearInput();
-    clearEquation();
 };
 
 document.querySelector('#delete').onclick = function(){
-    currentInput = currentInput.slice(0, -1);
+    if (currentInput.charAt(currentInput.length-1) === ' '){
+        currentInput = currentInput.slice(0, -3);
+        operator = '';
+    }
+    else{
+        currentInput = currentInput.slice(0, -1);
+    }
     inputText.innerHTML = currentInput;
 };
 
@@ -81,33 +92,30 @@ document.querySelector('#period').onclick = function(e){
         currentInput += "0.";
         inputText.innerHTML = currentInput;
     }
-    else if (!currentInput.includes(".")){
+    // Allow period to be added if there is no period in currentInput, or if the last occuranc of a period is before the operator
+    if (!currentInput.includes(".") || (currentInput.lastIndexOf(' ') > currentInput.lastIndexOf('.'))){
         currentInput += e.target.innerHTML;
         inputText.innerHTML = currentInput;
     }
 }
 
+// When equals is clicked, split currentInput at the spaces and set the number variables accordingly
 document.querySelector('#equals').onclick = function(){
-    if (isNaN(number1)){
-        number1 = Number(currentInput);
-    }
-    else {
-        number1 = operate(number1, operator, Number(currentInput));
-    }
-    equationText.innerHTML = number1;
+    const equation = currentInput.split(' ');
+    number1 = Number(equation[0]);
+    number2 = Number(equation[2]);
+    prevSolution = operate(number1, operator, number2);
+    equationText.innerHTML = prevSolution;
     clearInput();
 }
 
 function clearInput(){
+    operator = '';
     currentInput = '';
     inputText.innerHTML = currentInput;
 }
 function clearEquation(){
-    equationText.innerHTML = '';
-    number1 = NaN;
+    prevSolution = '';
+    equationText.innerHTML = prevSolution;
+    
 }
-
-//console.log(operate(number1, operator, number2));
-// console.log(subtraction(7, 2));
-// console.log(multiplication(3, 5));
-// console.log(division(101, 23));
